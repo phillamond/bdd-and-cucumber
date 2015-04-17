@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Behaviour Driven Development (BDD) with Cucumber - Phil Lamond</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h2>Behaviour Driven Development (BDD) with Cucumber</h2>
+					<h3><em>What it is and why do it</em></h3>
+					<h4>Phil Lamond</h4>
+					<aside class="notes">
+						This talk is about Behaviour Driven Development and explains what it is as a concept of agile software development
+					</aside>
+				</section>
+
+				<section>
+					<h2>Coming up:</h2>
+					<ol>
+						<li class="fragment roll-in"><a href="#/2">What Is Behaviour Driven Development?</a></li>
+						<li class="fragment roll-in"><a href="#/3">Why do BDD?</a></li>
+						<li class="fragment roll-in"><a href="#/4">What practises characterise BDD?</a></li>
+						<li class="fragment roll-in"><a href="#/5">How to do BDD?</a></li>
+						<li class="fragment roll-in"><a href="#/6">Cucumber and Friends</a></li>
+						<li class="fragment roll-in"><a href="#/7">Cucumber Worked Example</a></li>
+						<li class="fragment roll-in"><a href="#/8">Design Considerations</a></li>
+						<li class="fragment roll-in"><a href="#/9">Recommended Reading</a></li>
+						<li class="fragment roll-in"><a href="#/10">Any Questions?</a></li>
+					</ol>
+				</section>
+
+				<section>
+					<section>
+						<h2>What Is Behaviour Driven Development?</h2>
+						<ul>
+							<li class="fragment roll-in">"BDD (Behaviour Driven Development) is a synthesis and refinement of practices stemming from TDD (Test Driven Development) and ATDD (Acceptance Test Driven Development)" - <em>Agile Alliance</em></li>
+							<li class="fragment roll-in"><strong>Dan North</strong>: <a href="http://dannorth.net/introducing-bdd/">http://dannorth.net/introducing-bdd/</a></li>
+							<li class="fragment roll-in">"<strong><em>Behaviour</em></strong> is a more useful word than <strong><em>test</em></strong>"</li>
+							<li class="fragment roll-in">"Requirements are behaviour, too"</li>
+							<li class="fragment roll-in">"BDD provides a <strong><em>ubiquitous language</em></strong> for analysis"</li>
+							<li class="fragment roll-in">"Acceptance criteria should be <strong><em>executable</em></strong>"</li>
+						</ul>
+						
+						<aside class="notes">
+							- A definition of BDD from the Agile Alliance website, which doesn't actually say what it is - just where it comes from. Also a few paragraph headings from Dan North's original blog article on the subject in 2004.
+
+							- Idea stemmed from some dissatisfaction with development teams being overly focussed on the test domain rather than the functional behaviours of the production software being tested.
+
+							- The business requirements themselves should be interpreted as behaviour
+
+							- Ubiquitous language of the business domain should permeate all the way down from the requirements into the software itself to eliminate confusion cause by business stakeholders and developers using different terms to describe the same things
+
+							- Acceptance criteria written down as a description of the software's behaviour should be excutable. So literally the software does what it says it does
+						</aside>
+					</section>
+
+					<section>
+						<h2>What Is Behaviour Driven Development?</h2>
+						<ul>
+							<li class="fragment roll-in">
+								<img src="images/sbe_book.jpg" width="150" />
+								Equivalent idea: Specification by Example - Gojko Adzic</li>
+							<li class="fragment roll-in">Specifications should be executable descriptions of the software's behaviour</li>
+						</ul>					
+
+						<aside class="notes">
+							SBE is a book for business stakeholders making the case for why BDD is worthwhile without going into any technical detail. 
+							Especially good for product managers, project managers and business analysts but should also be of interest to developers
+						</aside>
+					</section>
+
+					<section>
+						<h2>What Is Behaviour Driven Development?</h2>
+						<ul>
+							<li class="fragment roll-in">The software does exactly what it says it does in its specification/description
+								<ul>
+									<li class="fragment roll-in">In the form of <strong><em>examples</em></strong>, or <strong><em>scenarios</em></strong></li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>What Is Behaviour Driven Development?</h2>
+						<ul>
+							<li class="fragment roll-in">As project progresses, useful <strong><em>living documentation</em></strong> emerges<br/>
+								<img src="images/sbe_key_process_patterns.png" width="500" class="fragment roll-in" />
+							</li>
+						</ul>
+
+						<aside class="notes">
+							Here is Gojko Adzic's illustration of the key process patterns when using specification by example that lead to automatically
+							updated 'living documentation'. He also points out that "with Specification by Example, functional requirements, specifications, and acceptance tests are the same thing".
+						</aside>
+					</section>
+				</section>
+
+
+				<section>
+					<section>
+						<h2>Why Do BDD?</h2>
+						<ul>
+							<li class="fragment roll-in">Provides <strong><em>conversational space/opportunity to agree what the software is supposed to do</em></strong> (aka business requirements) between key stakeholders in the business</li>
+							<ul>
+								<li class="fragment roll-in">And crucially have this behaviour encoded as a <strong>readable</strong> (to <em>everyone</em>) <strong>executable specification</strong></li>
+								<li class="fragment roll-in">The sum of the specs/examples/scenarios provide the '<strong>living documentation</strong>'</li>
+							</ul>
+							<li class="fragment roll-in">The closest practical expression of Agile/Lean software development there is</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Why Do BDD?</h2>
+						<ul>
+							<li class="fragment roll-in">As a synthesis/refinement of TDD it confers all the same benefits, but at a <em>macro</em> level. To pick a few:</li>
+							<ul>
+								<li class="fragment roll-in">Focus on required features</li>
+								<li class="fragment roll-in">Avoids speculative coding (YAGNI)</li>
+								<li class="fragment roll-in">Very high functional test coverage as natural side-effect</li>
+							</ul>
+							<li class="fragment roll-in">Trustworthy high-level regression harness when automated</li>
+							<li class="fragment roll-in">Crucial element in making <strong><em>Continuous Delivery</em></strong> work</li>
+						</ul>
+						<aside class="notes">
+							Continuous delivery only works if you have significant test acceptance test coverage so that we are able to trust that any functional regressions
+							as a result of changes that have been deployed (not caught by unit tests)
+						</aside>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>What practises characterise BDD?</h2>
+						<ul>
+							<li>Use of user stories to describe goal of feature</li>
+						</ul>
+						<pre><code class="nohighlight" data-trim contenteditable>
+As a customer,
+I want to withdraw cash from an ATM,
+so that I don’t have to wait in line at the bank
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>What practises characterise BDD?</h2>
+						<ul>
+							<li class="fragment roll-in"><strong>Given - When - Then</strong> format for description of feature examples/scenarios</li>
+							<ul>
+								<li class="fragment roll-in">Follows <strong>Arrange -> Act -> Assert</strong> model</li>
+							</ul>
+						</ul>
+						<aside class="notes">
+							Arrange - test set up
+							Act - SUT invoked
+							Assert - perform verfications
+						</aside>
+					</section>
+
+					<section>
+						<h2>What practises characterise BDD?</h2>
+						<ul>
+							<li><strong>Given - When - Then</strong> format for description of examples</li>
+						</ul>
+						<pre><code class="nohighlight" data-trim contenteditable>
+Given the account is overdrawn
+And the card is valid
+When the customer requests cash
+Then ensure a rejection message is displayed
+And ensure cash is not dispensed
+And ensure the card is returned
+						</code></pre>
+						<aside class="notes">
+							Arrange - test set up
+							Act - SUT invoked
+							Assert - perform verfications
+						</aside>
+					</section>
+
+					<section>
+						<h2>What practises characterise BDD?</h2>
+						<ul>
+							<li>Outside-in development cycle</li>
+						</ul>
+						<img src="images/OutsideInDevelopmentCycle.png">
+						<ul>
+							<li> on <strong><em>vertical slices</em></strong> of functionality</li>
+						</ul>
+						<aside class="notes">
+							Red-green refactor cycle of TDD repeated for every vertical slice of functionality in a software feature
+						</aside>
+					</section>
+
+					<section>
+						<h2>What practises characterise BDD?</h2>
+						<ul>
+							<li class="fragment roll-in">A <strong><em>ubiquitous vocabulary</em></strong> for the business domain</li>
+							<li class="fragment roll-in">The same terms should be used throughout all levels of the software</li>
+							<ul>
+								<li class="fragment roll-in">E.g. so that we don't have a developer referring to a <strong><em>Release</em></strong> and a <strong><em>Track</em></strong></li>
+								<li class="fragment roll-in">and a Product Manager referring to an <strong><em>Album</em></strong> and a <strong><em>Song</em></strong></li>
+								<li class="fragment roll-in">where in fact they are talking about the same things</li>
+							</ul>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section data-background="images/scenario_workshop.jpg" data-background-transition="zoom">
+						<div style="color: #fff">
+							<h2 style="color: #fff">How to do BDD?</h2>
+							<ul>
+								<li class="fragment roll-in"><strong><em>Specification workshops</em></strong></li>
+								<ul>
+									<li class="fragment roll-in">Classic stakeholder roles (sometimes called the <strong><em>Three Amigos</em></strong>):</li>
+									<ul>
+										<li class="fragment roll-in">Product Owner</li>
+										<li class="fragment roll-in">Business Analyst</li>
+										<li class="fragment roll-in">Developer/Tester</li>
+									</ul>
+									<li class="fragment roll-in">Doesn't have to be those roles - can map to whatever is appropriate in company context</li>
+									<li class="fragment roll-in">Output of workshop is a <strong><em>set of acceptance criteria</em></strong> for the features agreed</li>
+								</ul>
+							</ul>
+						</div>
+					</section>
+
+					<section>
+						<h2>How to do BDD?</h2>
+						<ul>
+							<li class="fragment roll-in">Choose a BDD framework / development tool e.g. <strong><a href="https://cukes.info/">Cucumber</a></strong> (more on this later)</li>
+							<li class="fragment roll-in">Plan development of features test-first (<em>allow time</em>!)</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>How to do BDD?</h2>
+						<ul>
+							<li class="fragment roll-in">Treat each feature in acceptance criteria as a vertical slice</li>
+							<ul>
+								<li class="fragment roll-in">Version control the acceptance criteria - it is <em>executable</em></li>
+								<li class="fragment roll-in">Implement acceptance criteria in chosen tool such that upon execution they <span style="color: red"><strong><em>fail</strong></em></span> for the <em>correct reason</em>:</li>
+								<ul>
+									<li class="fragment roll-in">The production code for the new/modified feature isn't there yet!</li>
+								</ul>
+								<li class="fragment roll-in">Implement at the component level, also test-first</li>
+								<li class="fragment roll-in">Deploy implemented feature, triggering acceptance tests and...</li>
+								<ul>
+									<li class="fragment roll-in">...watch them <span style="color: green"><strong><em>pass</strong></em></span>!</li>
+								</ul>
+							</ul>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h2>Cucumber and Friends</h2>
+					<ul>
+						<li class="fragment roll-in">There are numerous BDD implementation frameworks out there. Non-exhaustive list:</li>
+						<ul class="fragment roll-in">
+							<li><a href="http://cukes.info/">Cucumber</a></li>
+							<li><a href="http://www.specflow.org/">Specflow (Cucumber for .NET)</a></li>
+							<li><a href="http://jbehave.org/">JBehave</a></li>
+							<li><a href="http://jgiven.org/">JGiven</a></li>
+							<li><a href="http://www.concordion.org/">Concordion</a></li>
+							<li><a href="http://easyb.org/">Easyb</a></li>
+						</ul>
+						<li class="fragment roll-in">Cucumber is the most popular, perhaps because of the focus on '<em>simple, human collaboration</em>' (Gherkin), and wide language support</li>
+					</ul>
+					<aside class="notes">Cucumber has had about 10 million downloads so far (7m of which are Ruby flavour)</aside>
+				</section>
+
+				<section>
+					<section data-background="images/cucumbers.jpg" data-background-transition="zoom">
+						<h2 style="color: #fff">Cucumber Worked Example</h2>
+					</section>
+
+					<section>
+						<h2>Cucumber Worked Example</h2>
+						<ul>
+							<li class="fragment roll-in">Go to kitchen</li>
+							<li class="fragment roll-in">Grab cucumber from fridge</li>
+							<li class="fragment roll-in">Take chopping board</li>
+							<li class="fragment roll-in">Finely slice...</li>
+						</ul>
+						<p class="fragment roll-in"><em>Not really :)</em></p>
+					</section>
+
+					<section>
+						<h2>Cucumber Worked Example</h2>
+						<ul>
+							<li class="fragment roll-in">An Artists ReST API allows you to query it for album length</li>
+							<ul>
+								<li class="fragment roll-in">(Appropriate developer project set up assumed)</li>
+							</ul>
+							<li class="fragment roll-in"><strong>User story</strong> (feature):</li>
+						</ul>
+						<pre class="fragment roll-in"><code class="nohighlight" data-trim contenteditable>
+Feature: Artist Album length
+
+As an Artists API consumer
+In order to display total album length to my customers
+I need to be able to query an album for its length in seconds
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Cucumber Worked Example</h2>
+						<ul>
+							<li class="fragment roll-in"><strong>Feature scenario</strong> (there can be more than one):</li>
+						</ul>
+						<pre class="fragment roll-in" style="width: 1050px"><code class="nohighlight" data-trim contenteditable>
+Scenario: Album length query
+
+  Given the musician Oscar Peterson has an ID of "oscar_peterson"
+  And his album Night Train has an ID of "night_train"
+  When I send a GET request to "/artists/{artistId}/album/{albumId}/length"
+  And the sum length of all the tracks on the album is 2533 seconds
+  And there is a 2 second gap between all tracks
+  Then the API query response body should contain a total album length of 2555 seconds
+						</code></pre>
+					</section>
+
+				<section>
+						<h2>Cucumber Worked Example</h2>
+						<ul>
+							<li class="fragment roll-in"><strong>Step definition fragment</strong> (in Java)</li>
+						</ul>
+						<pre class="fragment roll-in" style="width: 1100px"><code class="java" data-trim contenteditable>
+@Given("^the musician Oscar Peterson has an ID of (.*?)$")
+public void the_musician_oscar_peterson_has_an_id_of(String artistId) throws Throwable {
+	this.artistId = artistId;
+}
+
+@Given("^his album Night Train has an ID of (.*?)$")
+public void his_album_night_train_has_an_id_of(String artistId) throws Throwable {
+	this.albumId = albumId;
+}
+						</code></pre>
+					</ul>
+				</section>
+
+				<section>
+						<h2>Cucumber Worked Example</h2>
+						<ul>
+							<li class="fragment roll-in"><strong>Step definition fragment</strong> (in Java)</li>
+						</ul>
+						<pre class="fragment roll-in" style="width: 1150px"><code class="java" data-trim contenteditable>
+@When("^I send a GET request to (.*?)$")
+public void when_i_send_a_get_request_to(String pathTemplate) throws Throwable {
+	String path = substitute(pathTemplate, this.artistId, this.albumId);
+	this.response = get(path)
+}
+
+@When("^the sum length of all the tracks on the album is 2533 seconds$")
+public void the_sum_length_of_all_the_tracks_on_the_album_is_2533_seconds() throws Throwable {
+	// no-op for description only
+}
+						</code></pre>
+					</ul>
+				</section>
+
+				<section>
+						<h2>Cucumber Worked Example</h2>
+						<ul>
+							<li class="fragment roll-in"><strong>Step definition fragment</strong> (in Java)</li>
+						</ul>
+						<pre class="fragment roll-in" style="width: 1150px"><code class="java" data-trim contenteditable>
+@When("^there is a 2 second gap between all tracks$")
+public void there_is_a_2_second_gap_between_all_tracks() throws Throwable {
+	// no-op for description only
+}
+
+@Then("^the API query response body should contain a total album length of (\\d+) seconds$")
+public void the_api_query_response_body_should_contain_total_album_length(String expectedLength)
+	throws Throwable {
+	assertThat(Integer.parseInt(response.getBody()), is(expectedLength));
+}
+							</code></pre>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h2>Design Considerations</h2>
+					<ul>
+						<li class="fragment roll-in"><strong><em>Decouple</em></strong> from the subject under test (SUT)</li>
+						<ul>
+							<li class="fragment roll-in">SUT should be a roll-up of behaviour encompassing a set of features</li>
+							<li class="fragment roll-in">Don't use software built or generated by the SUT in your acceptance test project</li>
+						</ul>
+						<li class="fragment roll-in">Treat what your testing as a <strong><em>black box</em></strong></li>
+						<li class="fragment roll-in">Consider an XUnit library or framework (e.g. JUnit or TestNG) if you find yourself testing program units (classes, objects)</li>
+						<li class="fragment roll-in">When implementing Cucumber features, to encourage step reuse, organise step-definitions by cross-cutting concerns where possible</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Recommended Reading</h2>
+					<ul>
+						<li class="fragment roll-in">A selection of books that cover the subject:</li>
+						<ul class="fragment roll-in">
+							<li><img src="images/sbe_book.jpg" width="50" style="vertical-align: middle"/>
+								<a href="http://www.manning.com/adzic/">Specification by Example</a> - <span style="font-size: 24px">Gojko Adzic</span>
+							</li>
+							<li><img src="images/the_rspec_book.jpg" width="50" style="vertical-align: middle"/>
+								<a href="https://pragprog.com/book/achbd/the-rspec-book">The RSpec Book</a> - <span style="font-size: 24px">David Chelimsky, Dave Astels, Zach Dennis, Aslak Hellesøy, Bryan Helmkamp &amp; Dan North</span>
+							</li>
+							<li>
+								<img src="images/the_cucumber_book.jpg" width="50" style="vertical-align: middle"/>
+								<a href="https://pragprog.com/book/hwcuc/the-cucumber-book">The Cucumber Book</a> - <span style="font-size: 24px">Matt Wynne &amp; Aslak Hellesøy</span>
+							</li>
+							<li>
+								<img src="images/the_cucumber_for_java_book.jpg" width="50" style="vertical-align: middle"/>
+								<a href="https://pragprog.com/book/srjcuc/the-cucumber-for-java-book">The Cucumber for Java Book</a> - <span style="font-size: 24px">Seb Rose, Matt Wynne &amp; Aslak Hellesøy</span>
+							</li>
+						</ul>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Any Questions?</h2>
+					<p>(<em>please be nice!</em>)</p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
